@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { posts } from "@/server/db/schema";
 
 export const postRouter = createTRPCRouter({
@@ -11,7 +15,13 @@ export const postRouter = createTRPCRouter({
         greeting: `Hello ${input.text}`,
       };
     }),
-
+  secretHello: protectedProcedure
+    .input(z.object({ text: z.string() }))
+    .query(({ input }) => {
+      return {
+        greeting: `Hello ${input.text}`,
+      };
+    }),
   create: publicProcedure
     .input(z.object({ name: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {

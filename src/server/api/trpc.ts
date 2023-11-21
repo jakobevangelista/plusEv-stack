@@ -7,12 +7,11 @@
  * need to use are documented accordingly near the end.
  */
 import { TRPCError, initTRPC } from "@trpc/server";
-import { type NextRequest } from "next/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
 import { db } from "@/server/db";
-import { currentUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 /**
  * 1. CONTEXT
@@ -20,43 +19,23 @@ import { currentUser } from "@clerk/nextjs";
  * This section defines the "contexts" that are available in the backend API.
  *
  * These allow you to access things when processing a request, like the database, the session, etc.
+ *
+ * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
+ * wrap this and provides the required context.
+ *
+ * @see https://trpc.io/docs/server/context
  */
 
-interface CreateContextOptions {
-  headers: Headers;
-}
-
-/**
- * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
- * it from here.
- *
- * Examples of things you may need it for:
- * - testing, so we don't have to mock Next.js' req/res
- * - tRPC's `createSSGHelpers`, where we don't have req/res
- *
- * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
- */
-export const createInnerTRPCContext = async (opts: CreateContextOptions) => {
-  const user = await currentUser();
-  return {
-    headers: opts.headers,
-    db,
-    user,
-  };
-};
-
-/**
- * This is the actual context you will use in your router. It will be used to process every request
- * that goes through your tRPC endpoint.
- *
- * @see https://trpc.io/docs/context
- */
-export const createTRPCContext = (opts: { req: NextRequest }) => {
+//  need to find a way to make this work wihout async
+// eslint-disable-next-line @typescript-eslint/require-await
+export const createTRPCContext = async (opts: { headers: Headers }) => {
   // Fetch stuff that depends on the request
 
-  return createInnerTRPCContext({
-    headers: opts.req.headers,
-  });
+  return {
+    db,
+    auth: auth(),
+    ...opts,
+  };
 };
 
 /**
@@ -105,14 +84,14 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const enforcedUserIsAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.user?.id) {
+  if (!ctx.auth.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
   return next({
     ctx: {
       // infers the `session` as non-nullable
-      user: { ...ctx.user, user: ctx.user.id },
+      user: { ...ctx.auth, user: ctx.auth.userId },
     },
   });
 });

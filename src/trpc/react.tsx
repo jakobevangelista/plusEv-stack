@@ -18,7 +18,7 @@ export function TRPCReactProvider(props: {
 
   const [trpcClient] = useState(() =>
     api.createClient({
-      transformer,
+      // transformer: transformer,
       links: [
         loggerLink({
           enabled: (op) =>
@@ -26,13 +26,14 @@ export function TRPCReactProvider(props: {
             (op.direction === "down" && op.result instanceof Error),
         }),
         unstable_httpBatchStreamLink({
+          transformer,
           url: getUrl(),
-          headers() {
-            return {
-              cookie: props.cookies,
-              "x-trpc-source": "react",
-            };
-          },
+          // headers() {
+          //   return {
+          //     cookie: props.cookies,
+          //     "x-trpc-source": "react",
+          //   };
+          // },
         }),
       ],
     }),

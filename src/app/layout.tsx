@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 // import { Inter } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 import "@/styles/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
 import { TRPCReactProvider } from "@/trpc/react";
-import { cookies } from "next/headers";
+import { ClerkProvider } from "@clerk/nextjs";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-import { ThemeProvider } from "@/components/theme-provider";
 
 // const inter = Inter({ subsets: ["latin"] });
 
@@ -22,9 +21,12 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body className={`${GeistSans.variable}${GeistMono.variable}`}>
-          <TRPCReactProvider cookies={cookies().toString()}>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${GeistSans.variable}${GeistMono.variable}`}
+          suppressHydrationWarning
+        >
+          <TRPCReactProvider>
             <ThemeProvider attribute="class" defaultTheme="dark">
               {children}
             </ThemeProvider>

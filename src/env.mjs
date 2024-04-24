@@ -18,7 +18,6 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     PUSHER_HOST: z.string(),
-
     PUSHER_PORT: z.string(),
     PUSHER_APP_ID: z.string(),
     PUSHER_APP_KEY: z.string(),
@@ -42,7 +41,6 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     PUSHER_HOST: process.env.PUSHER_HOST,
-
     PUSHER_PORT: process.env.PUSHER_PORT,
     PUSHER_APP_ID: process.env.PUSHER_APP_ID,
     PUSHER_APP_KEY: process.env.PUSHER_APP_KEY,

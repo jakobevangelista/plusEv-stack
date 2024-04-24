@@ -11,7 +11,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.27.1",
+    "@clerk/nextjs": "^5.0.0-beta.45",
     "@planetscale/database": "^1.11.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.7.1",
@@ -47,7 +47,7 @@
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "drizzle-kit": "^0.20.2",
-    "eslint": "latest",
+    "eslint": "8.57",
     "eslint-config-next": "latest",
     "postcss": "^8",
     "prettier": "^3.1.0",

@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.0-beta.45",
+    "@headlessui/react": "^2.1.2",
+    "@heroicons/react": "^2.1.5",
     "@planetscale/database": "^1.11.0",
+    "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-slot": "^1.0.2",
     "@t3-oss/env-nextjs": "^0.7.1",
     "@tanstack/react-query": "latest",
